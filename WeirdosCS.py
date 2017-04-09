@@ -97,5 +97,24 @@ if numpy.allclose(numpy.dot(MatrixT, solution), VectorB) == 0:
     sys.exit('Error occurred while solving the circuit. Program interrupted.')
 
 #print results (RESULTS SHOULD BE SHOWN IN A BETTER WAY)
-
-
+count = 0
+print "potenziali ai nodi con nodo di riferimeno nodo 0"
+for res in solution:
+    if count< n: #stampa potenziali ai nodi
+        print "potenziale del nodo ", count+1, ": " , res
+    if count>= n and count < n+l: #stampa tensioni
+        if lines[count-n][0] == 'R':
+            print "tensione ai capi del resistore R" , lines[count-n][1], ": ", res
+        elif lines[count-n][0] == 'V':
+            print "tensione ai capi del generatore V", lines[count -n][1], ": ", res
+        elif lines[count - n][0] == 'I':
+            print "tensione ai capi del generatore I", lines[count - n][1], ": ", res
+    #stampa correnti
+    if count>= n+l:
+        if lines[count-(n+l)][0] == 'R':
+            print "corrente passante per R" , lines[count - (n+l)][1], ": ", res
+        elif lines[count-(n+l)][0] == 'V':
+            print "corrente passante per V", lines[count - (n+l)][1], ": ", res
+        elif lines[count - (n+l)][0] == 'I':
+            print "corrente passante per I", lines[count - (n+l)][1], ": ", res
+    count= count+1

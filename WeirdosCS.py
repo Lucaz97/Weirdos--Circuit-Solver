@@ -1,21 +1,40 @@
+####################################
+# # # #Weirdos Circuit Solver# # # #
+#
+#
+####################################
+
 import numpy
 import sys
-
 
 #######################
 # # # #FUNCTIONS# # # #
 #######################
 
-def checkData(matrix):
+def checkData(matrix):  #check if input data is correct by analyzing the corresponding matrices
     #TODO: chech data consistency (this function should be called passing the full incidence matrix)
+    absM = numpy.absolute(matrix)
+    (l, n) = matrix.shape
+    #check sum of numbers in columns SHOULD BE 0
+    rowSum =  numpy.sum(matrix, axis=0)
+    for ints in rowSum:
+        if ints != 0.0:
+            return 0
+    #check hanging and isolated nodes
+    colSum = numpy.sum(absM , axis= 1)
+    for ints in colSum:
+        if ints <=1:
+            return 0
     return 1
+    #check block matrix
 
 #######################
 # # # #   END   # # # #
 #######################
 
+
 inputFile = "input.txt"
-# opens input file
+# open input file
 with open(inputFile, "r") as f:
     data = f.readlines()
 # read all lines and store them
@@ -40,7 +59,7 @@ MatrixM = numpy.zeros((l, l))     # voltages matrix
 MatrixN = numpy.zeros((l, l))     # currents matrix
 VectorZ = numpy.zeros((l, 1))     # known terms vector
 
-#feel Matrices and vector
+#fill Matrices and vector
 count = 0
 for lati in lines:
     MatrixA[int(lati[2])][count] = 1.0
@@ -57,7 +76,28 @@ for lati in lines:
     elif lati[0] == 'I':
         MatrixN[count][count] = 1
         VectorZ[count] = int(lati[4])
+    #if element is voltage controlled current source:
+    elif lati[0] == 'VCCS':
+        MatrixN[count][count] = 1
+        MatrixM[count][int(lati[5])] = int(lati[4])
+        MatrixN[int(lati[5])][int(lati[5])] = 1
+    #if element is current controlled current source
+    elif lati[0] == 'CCCS':
+        MatrixN[count][count] = 1
+        MatrixN[count][int(lati[5])] = int(lati[4])
+        MatrixM[int(lati[5])][int(lati[5])] = 1
+    #if element is current controlled voltage source
+    elif lati[0] == 'CCVS':
+        MatrixM[count][count] = 1
+        MatrixN[count][int(lati[5])] = int(lati[4])
+        MatrixM[int(lati[5])][int(lati[5])] = 1
+    #if element is voltage controlled voltage source
+    elif lati[0] == 'VCVS':
+        MatrixM[count][count] = 1
+        MatrixM[count][int(lati[5])] = int(lati[4])
+        MatrixN[int(lati[5])][int(lati[5])] =1
     count = count + 1
+
 
 #debug purpose only
 print "matrice A: "
@@ -77,7 +117,7 @@ if checkData(MatrixA) == 0:
 MatrixAr = numpy.delete(MatrixA, 0, 0)
 #build three horizontal blocks of the matrix T
 Matrix1 = numpy.concatenate((numpy.zeros((n,l+n)), MatrixAr), axis=1)
-Matrix2 = numpy.concatenate((MatrixAr.transpose(), numpy.identity(l), numpy.zeros((l,l))), axis = 1)
+Matrix2 = numpy.concatenate((numpy.negative(MatrixAr.transpose()), numpy.identity(l), numpy.zeros((l,l))), axis = 1)
 Matrix3 = numpy.concatenate((numpy.zeros((l,n)), MatrixM, MatrixN), axis = 1)
 #Merge the three blocks vertically to build matrix T
 MatrixT = numpy.concatenate((Matrix1, Matrix2, Matrix3), axis=0)
@@ -89,14 +129,14 @@ print MatrixT
 
 #find solution of the circuit
 solution = numpy.linalg.solve(MatrixT, VectorB)
-
+#check solution
+if numpy.allclose(numpy.dot(MatrixT, solution), VectorB) == 0:
+    sys.exit('Error occurred while solving the circuit. Program interrupted.')
+#print
 print "soluzione :"
 print solution
 
-if numpy.allclose(numpy.dot(MatrixT, solution), VectorB) == 0:
-    sys.exit('Error occurred while solving the circuit. Program interrupted.')
-
-#print results (RESULTS SHOULD BE SHOWN IN A BETTER WAY)
+#print results TODO: print results for controlled sources
 count = 0
 print "potenziali ai nodi con nodo di riferimeno nodo 0"
 for res in solution:

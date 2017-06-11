@@ -5,6 +5,4 @@ So far the program is able to solve a circuit with Resistors, Independent Voltag
 
 What this project is not about: this project is not about building an efficent circuit solver for professional use. The way we are implementing our circuit solver is not the best one, and we are aware of it. It may happen in the future that we will try to improve the efficency of our program, but it is not our goal so far.
 
-We are working on a UI with Tkinter and bringing more circuit elements to the program.
-
 Many thaks to our professor, Federico Bizzari, for his help on this project.  

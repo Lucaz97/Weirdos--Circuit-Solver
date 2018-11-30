@@ -1,0 +1,5 @@
+ACVS Eth 0#1 1#10#0
+ACVS Eth_2 4#0 1#1#0
+R Rth 1#2 1
+L Inductor 2#3 1#1
+C Capacitor_Two 3#4 0.1#1

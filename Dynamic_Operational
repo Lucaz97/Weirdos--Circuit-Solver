@@ -1,0 +1,6 @@
+DCVS Eth 3#1 10
+R R_Top 2#0 2
+R R_Bot 3#2 3
+R R_Left 0#4 5
+C Capacitor 3#4 0.1#0
+OP_AMP Operational 0#1#2#3

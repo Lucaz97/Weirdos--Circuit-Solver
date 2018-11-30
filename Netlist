@@ -1,0 +1,6 @@
+R R_1 2#1 20
+R R_2 3#2 30
+R R_3 pilot#2 40
+DCVS I_nr 0#1 0
+DCCS I_s 3#1 -1
+CCCS Controlled 0#pilot#3#0 -3

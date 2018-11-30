@@ -1,0 +1,5 @@
+DCCS I1 0#1 -1
+R R 2#3 1
+R 2R 3#4 2
+CCCS cccs 2#1#0#4 11
+SC sc 0#3

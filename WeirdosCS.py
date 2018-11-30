@@ -44,7 +44,6 @@ class Topology:
         self.build_Z(step)
         self.T_matrix = self.build_T()
 
-
     def init_clean(self, nodes, edges):  # Clean nodes, clean edges of nonexistent nodes
         nodes_clean = list(set(nodes))  # Remove duplicates in node vector
         for edge in edges:  # Remove pointers to nonexistent nodes in edges
@@ -436,7 +435,6 @@ class Simulation:
                         edge.current_tracker.append(self.solution[offset + len(self.topology.edge_list) +
                                                                       self.topology.edge_list.index(edge)])
                         edge.voltage_tracker.append(self.solution[offset + self.topology.edge_list.index(edge)])
-
 
     def plot_trackers(self):
         for edge in self.topology.edge_list:
